@@ -1,0 +1,39 @@
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+// Get the response body as JSON
+var responseBody = pm.response.json();
+
+// Check if the string "cats" is present in any title
+pm.test("String 'cats' found in any title", function () {
+    var found = responseBody.data.some(function (item) {
+        return item.title.toLowerCase().includes("cats");
+    });
+    
+    pm.expect(found).to.be.true;
+});
+
+pm.test("api_model is 'artworks'", function () {
+    responseBody.data.forEach(function (item) {
+        pm.expect(item.api_model).to.equal('artworks');
+    });
+});
+
+pm.test("Thumbnail URLs are valid", function () {
+    responseBody.data.forEach(function (item) {
+        pm.expect(item.thumbnail).to.have.property("lqip").that.is.a("string");
+    });
+});
+
+pm.test("Check if 'is_boosted' is a boolean", function () {
+    responseBody.data.forEach(function (item) {
+        pm.expect(item.is_boosted).to.be.a("boolean");
+    });
+});
+
+pm.test("API links are valid URLs", function () {
+    responseBody.data.forEach(function (item) {
+        pm.expect(item.api_link).to.match(/^https?:\/\/\S+$/); // Checks if the link starts with http or https
+    });
+});
