@@ -1,0 +1,22 @@
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response should have products", function () {
+    pm.response.to.have.jsonBody("data");
+});
+
+pm.test("Response should be a valid image", function () {
+    pm.response.to.have.header("Content-Type", "application/json");
+});
+
+pm.test("Pricing information is correct", function () {
+    pm.response.to.have.jsonBody("data[0].price_display", "<p>$16.99 <s>$0</s></p>");
+    pm.response.to.have.jsonBody("data[0].min_current_price", 16.99);
+    pm.response.to.have.jsonBody("data[0].max_current_price", 16.99);
+});
+
+pm.test("License information is correct", function () {
+    pm.response.to.have.jsonBody("info.license_text", "The data in this response may be protected by copyright, and other restrictions, of the Art Institute of Chicago and third parties.");
+    pm.response.to.have.jsonBody("info.version", "1.10");
+});
