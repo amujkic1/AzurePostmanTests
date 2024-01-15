@@ -1,0 +1,23 @@
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Pagination details are correct", function () {
+    const jsonData = pm.response.json();
+
+    pm.expect(jsonData.pagination.total).to.be.a("number");
+    pm.expect(jsonData.pagination.limit).to.be.a("number");
+    pm.expect(jsonData.pagination.offset).to.be.a("number");
+    pm.expect(jsonData.pagination.total_pages).to.be.a("number");
+    pm.expect(jsonData.pagination.current_page).to.be.a("number");
+    pm.expect(jsonData.pagination.next_url).to.be.a("string");
+});
+
+pm.test("Data items have expected properties", function () {
+    const jsonData = pm.response.json();
+
+    jsonData.data.forEach(function (item) {
+        pm.expect(item.id).to.be.a("number");
+        pm.expect(item.api_model).to.equal("artworks");
+    });
+});
